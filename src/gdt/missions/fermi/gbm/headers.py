@@ -29,7 +29,7 @@
 from gdt.core.headers import Header, FileHeaders
 from ..time import Time
 
-__all__ = ['HealpixHeaders', 'PhaHeaders', 'PhaiiHeaders', 'PhaiiTriggerHeaders',
+__all__ = ['BcatHeaders', 'HealpixHeaders', 'PhaHeaders', 'PhaiiHeaders', 'PhaiiTriggerHeaders',
            'PosHistHeaders', 'RspHeaders', 'ScatHeaders', 'TcatHeaders',
            'TrigdatHeaders', 'TteHeaders', 'TteTriggerHeaders']
 
