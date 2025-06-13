@@ -54,7 +54,7 @@ medium_consistent_loc = HealPixLocalization.from_gaussian(48.0, 4.0, 5.0)
 
 large_consistent_loc = HealPixLocalization.from_gaussian(48.0, 4.0, 10.0)
 
-@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixFromFile(unittest.TestCase):
     
     def setUp(self):
@@ -67,6 +67,16 @@ class TestGbmHealPixFromFile(unittest.TestCase):
         ra, dec = self.hpx.centroid
         self.assertAlmostEqual(ra, 48.87, places=2)
         self.assertAlmostEqual(dec, 4.18, places=2)
+    
+    def test_convolve(self):
+        hpx2 = self.hpx.convolve(ga_model)
+        assert hpx2.scpos.x.value == self.hpx.scpos.x.value
+        assert hpx2.scpos.y.value == self.hpx.scpos.y.value
+        assert hpx2.scpos.z.value == self.hpx.scpos.z.value
+        assert hpx2.quaternion.w == self.hpx.quaternion.w
+        assert hpx2.quaternion.x == self.hpx.quaternion.x
+        assert hpx2.quaternion.y == self.hpx.quaternion.y
+        assert hpx2.quaternion.z == self.hpx.quaternion.z
     
     def test_detectors(self):
         n0 = self.hpx.n0_pointing
@@ -305,7 +315,7 @@ class TestGbmHealPixFromFile(unittest.TestCase):
             hpx.close()
 
 
-@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixNoFrame(unittest.TestCase):
     
     def setUp(self):
@@ -358,7 +368,11 @@ class TestGbmHealPixNoFrame(unittest.TestCase):
         self.assertAlmostEqual(b1.dec.value, 17.1, places=1)
 
     def test_frame(self):
-        self.assertIsNone(self.hpx.frame)
+        assert self.hpx.frame.obstime == 'J2000.000'
+        assert self.hpx.frame.obsgeoloc.x.value == 0.0
+        assert self.hpx.frame.obsgeoloc.y.value == 0.0
+        assert self.hpx.frame.obsgeoloc.z.value == 0.0
+        assert self.hpx.frame.quaternion is None
 
     def test_geo_location(self):
         loc = self.hpx.geo_location
@@ -397,7 +411,7 @@ class TestGbmHealPixNoFrame(unittest.TestCase):
         self.assertGreaterEqual(prob, 0.99)      
 
 
-@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run gdt-download-data.")
+@unittest.skipIf(not hpx_file.exists(), "test files aren't downloaded. run 'gdt-data download fermi-gbm'.")
 class TestGbmHealPixNoHeaders(unittest.TestCase):
     
     def setUp(self):
